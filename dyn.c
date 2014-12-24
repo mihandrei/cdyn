@@ -4,12 +4,13 @@
 /*dampened v' = -kx - gv; v = x'*/
 void dfun(struct State *src, struct State *dest){
     double k = 9.0;
+    double damp = 0.0;
     dest->x = src->vx;
-    dest->vx = - k * src->x - src->vx;
+    dest->vx = - k * src->x - damp * src->vx;
 }
 
-// euler
-void integrate(struct State initial, int nsteps, double dt, struct State *h){
+
+void euler(struct State initial, int nsteps, double dt, struct State *h){
     struct State d;
     struct State s;
     s = initial;
@@ -23,6 +24,35 @@ void integrate(struct State initial, int nsteps, double dt, struct State *h){
     }
 }
 
+//ye_{i+1} = y_i + h * f(t_i,y_i)
+//
+//y_{i+1} = y_i + h/2 *( f(t_i, y_i) + f(t_{i+1},ye_{i+1}) )
+
+void heun(struct State initial, int nsteps, double dt, struct State *h){
+    struct State de;
+    struct State dn;
+
+    struct State yi;
+    struct State ye;
+
+    yi = initial;
+
+    int i;
+    for (i = 0; i < nsteps; i++){
+        dfun(&yi, &de); // euler prediction
+
+        ye.x = yi.x + dt * de.x;
+        ye.vx = yi.vx + dt * de.vx;
+
+        dfun(&ye, &dn); // eval in predicted point
+
+        yi.x += 0.5 * dt * (de.x + dn.x);   // correct the euler estimate by averaging
+        yi.vx += 0.5 * dt * (de.vx + dn.vx);
+
+        h[i] = yi;
+    }
+}
+
 struct Hist sim(struct State initial, double time_interv, double dt){
     if (time_interv <= 0 || dt <= 0 || dt >= time_interv) goto fail;
     struct Hist hist;
@@ -32,7 +62,7 @@ struct Hist sim(struct State initial, double time_interv, double dt){
     hist.len = nsteps + 1;
     hist.h[0] = initial;
 
-    integrate(initial, nsteps, dt, hist.h + 1);
+    euler(initial, nsteps, dt, hist.h + 1);
 
     return hist;
 
