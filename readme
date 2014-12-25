@@ -2,3 +2,6 @@ The aim is not to get lost in trying to be generic in C
 Write a coupled oscialator simulation.
 Integration memory allocation etc should be taylored to the specific model.
 No code reuse. Whant a different integration rewrite the functions.
+
+
+For coupled oscilators you need a coupling matrix. Hopefully sparse.

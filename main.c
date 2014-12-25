@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dyn.h"
+#include "coupled.h"
 
 void to_binary(struct Hist hist){
     FILE *f = fopen("hist.bin", "w");
@@ -19,14 +20,34 @@ void to_csv(struct Hist hist, double *ptime) {
     fclose(f);
 }
 
-int main(int argc, char *argv[]){
+void coupl_test(){
+    double *h = sim_coupled();
+
+    FILE *f = fopen("hist.csv", "w");
+    int i;
+    for (i = 0; i < NSTEPS * N * NVAR; i+=2) {
+        if(i%N == 0){
+            fprintf(f, "\n");
+        }
+        fprintf(f, "%f, ", h[i]);
+    }
+    fclose(f);
+
+    free(h);
+}
+
+void dyn_test(){
     struct State st = {.x=0, .vx=1};
-    struct Hist hist = sim(st, 10, 0.02);
-    double * time = timeline(10, 0.02);
+    struct Hist hist = sim(st, 10, 0.04);
+    double * time = timeline(10, 0.04);
     to_binary(hist);
     to_csv(hist, time);
     del_hist(&hist);
     free(time);
+}
+
+int main(int argc, char *argv[]){
+    coupl_test();
     return 0;
 }
 
