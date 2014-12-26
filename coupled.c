@@ -28,8 +28,6 @@
 #include <stdlib.h>
 #include "coupled.h"
 
-static const double k[] = {1.0, 1.0, 1.0, 1.0};
-
 /**
 * state shape = N, 2
 * dstate shape = N, 2
@@ -106,13 +104,12 @@ double * sim_coupled(){
     int i;
 
     for (i = 0; i < N; ++i) {
-        state[i * 2] = 0.0;
-        state[i * 2 + 1] = 0.0;
+        state[i] = INITIAL[i];
     }
-    state[0] = 1.0;
+
     for (i = 0; i < NSTEPS - 1 ; ++i) {
         next = state + stride;
-        heun(state, next, 0.1);
+        heun(state, next, STEP);
         state = next;
     }
     return hist;
