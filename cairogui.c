@@ -4,7 +4,7 @@
 
 void timeseries_2_png(double *h){
 
-    int YSPACING = 40;
+    int YSPACING = 60;
 
     cairo_surface_t *surface;
     cairo_t *cr;
@@ -14,7 +14,7 @@ void timeseries_2_png(double *h){
 
     cairo_set_line_width(cr, 2.0);
 
-    cairo_set_source_rgb (cr, 0.5, 0.5, 0.5);
+    cairo_set_source_rgb (cr, 0.9, 0.9, 0.9);
     cairo_paint(cr);
 
     int n, v, t;
@@ -24,8 +24,8 @@ void timeseries_2_png(double *h){
         for (v = 0; v < NVAR; ++v) {
             cairo_move_to(cr, 0, dy);
 
-            if (v%2 == 0) cairo_set_source_rgba(cr, 1, 0, 0, 0.5);
-            else cairo_set_source_rgba(cr, 0, 1, 0, 0.5);
+            if (v%2 == 0) cairo_set_source_rgba(cr, 0.1, 0.5, 0.8, 0.8);
+            else cairo_set_source_rgba(cr, 0.8, 0.1, 0.5, 0.2);
 
             for (t = 0; t < NSTEPS; ++t) {
                 y = h[t * N * NVAR + n * NVAR + v];

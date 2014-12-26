@@ -103,7 +103,7 @@ double * sim_coupled(){
     double *next;
     int i;
 
-    for (i = 0; i < N; ++i) {
+    for (i = 0; i < N* NVAR; ++i) {
         state[i] = INITIAL[i];
     }
 
