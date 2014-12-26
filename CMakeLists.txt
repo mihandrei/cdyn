@@ -20,3 +20,28 @@ add_executable(cairogui cairogui.c)
 
 target_link_libraries(cairogui coupled cairo)
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
+####gl stupidity#####
+pkg_search_module(GLFW REQUIRED glfw3)
+pkg_search_module(GLEW REQUIRED glew)
+
+#find_package(OpenGL REQUIRED)
+
+include_directories(${GLFW_INCLUDE_DIRS})
+include_directories(${GLEW_INCLUDE_DIRS})
+
+add_executable(glui ui.c)
+
+target_link_libraries(glui
+    m
+    coupled
+    ${OPENGL_LIBRARY}
+    ${GLFW_LIBRARIES}
+<<<<<<< Updated upstream
+    ${GLEW_LIBRARIES})
+=======
+    ${GLEW_LIBRARIES})
+>>>>>>> Stashed changes

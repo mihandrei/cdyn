@@ -26,7 +26,7 @@ void coupl_test(){
     FILE *f = fopen("hist.csv", "w");
     int i;
     for (i = 0; i < NSTEPS * N * NVAR; i+=2) {
-        if(i%N == 0){
+        if((i/2)%N == 0){
             fprintf(f, "\n");
         }
         fprintf(f, "%f, ", h[i]);
