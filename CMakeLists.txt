@@ -6,7 +6,7 @@ project(concrete_osc)
 set(CMAKE_BUILD_TYPE DEBUG)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 
-add_library(coupled STATIC
+add_library(coupled SHARED
     dyn.c
     coupled.c)
 
@@ -24,7 +24,7 @@ target_link_libraries(cairogui coupled cairo)
 pkg_search_module(GLFW REQUIRED glfw3)
 pkg_search_module(GLEW REQUIRED glew)
 
-#find_package(OpenGL REQUIRED)
+find_package(OpenGL REQUIRED)
 
 include_directories(${GLFW_INCLUDE_DIRS})
 include_directories(${GLEW_INCLUDE_DIRS})

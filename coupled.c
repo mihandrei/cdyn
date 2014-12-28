@@ -1,30 +1,3 @@
-/**
-* A system of coupled harmonic oscillators.
-*
-* Let N be the number of oscillators
-* x and v are N length vectors.
-*
-* Dynamic described by
-* v' = M x
-* x' = I v
-*
-* where M is a N by N coupling matrix and I is the identity
-*
-* We will simulate the 3 object system below
-* |------G1------G2-----G3------|
-*    k1      k2     k3      k4
-* For this kind of coupling we have
-* Fi = - ki ( x_i - x_{i-1} ) + k_{i+1} ( x{i+1} - x_i )
-* Thus M = diag( ki * x{i-1} , - (k_i + k_{i+1}) * x_i , k_{i+1} * x{i+1} )
-*
-* Implementation
-*
-* Coupling means we have to take the whole system into account
-* For linear systems like the one implemented we really only have to consider the neighbours: M is tri diagonals
-* So linear systems can be implemented more efficiently.
-* More arbitrary couplings will require a full sparse matrix multiply
-*/
-
 #include <stdlib.h>
 #include "coupled.h"
 
@@ -66,9 +39,9 @@ static void dfun(double *state, double *dstate) {
 * We allocate them as globals once before invoking heun to avoid malloc cost on every call
 * As N might be big the stack is not an option
 */
-static double dleft[N*2];
-static double dright[N*2];
-static double nexteuler[N*2];
+static double dleft[N * NVAR];
+static double dright[N * NVAR];
+static double nexteuler[N * NVAR];
 
 /**
 * just a step of the heun
@@ -76,20 +49,18 @@ static double nexteuler[N*2];
 * y_{i+1} = y_i + h/2 *( f(t_i, y_i) + f(t_{i+1},ye_{i+1}) )
 * the N, NVAR stride is assumed
 */
-static void heun(double *state, double *next, double dt){
-    int i, j, nv;
+static void heun(double *state, double *next, double dt) {
+    int i, nv;
     dfun(state, dleft);
-    for (i = 0; i < N; ++i) {
-        j = i * NVAR;
-        for (nv = 0; nv < NVAR; ++nv){
-            nexteuler[j + nv] = state[j + nv] + dt * dleft[j + nv];
+    for (i = 0; i < N * NVAR; i += NVAR) {
+        for (nv = 0; nv < NVAR; ++nv) {
+            nexteuler[i + nv] = state[i + nv] + dt * dleft[i + nv];
         }
     }
     dfun(nexteuler, dright);
-    for (i = 0; i < N; ++i) {
-        j = i * NVAR;
-        for (nv = 0; nv < NVAR; ++nv){
-            next[j + nv] = state[j + nv] + 0.5 * dt * (dleft[j + nv] + dright[j + nv]);
+    for (i = 0; i < N * NVAR; i+= NVAR) {
+        for (nv = 0; nv < NVAR; ++nv) {
+            next[i + nv] = state[i + nv] + 0.5 * dt * (dleft[i + nv] + dright[i + nv]);
         }
     }
 }
@@ -97,9 +68,9 @@ static void heun(double *state, double *next, double dt){
 /**
 * stride assumption N, 2
 */
-double * sim_coupled(){
+double *sim_coupled() {
     int stride = N * NVAR;
-    double *hist = malloc(sizeof(double) * NSTEPS  * N * NVAR);
+    double *hist = malloc(sizeof(double) * NSTEPS * N * NVAR);
 
     double *state = hist;
     double *next;
@@ -109,7 +80,7 @@ double * sim_coupled(){
         state[i] = INITIAL[i];
     }
 
-    for (i = 0; i < NSTEPS - 1 ; ++i) {
+    for (i = 0; i < NSTEPS - 1; ++i) {
         next = state + stride;
         heun(state, next, STEP);
         state = next;

@@ -14,7 +14,7 @@ void timeseries_2_png(double *h){
 
     cairo_set_line_width(cr, 2.0);
 
-    cairo_set_source_rgb (cr, 0.9, 0.9, 0.9);
+    cairo_set_source_rgb (cr, 0.1, 0.1, 0.2);
     cairo_paint(cr);
 
     int n, v, t;

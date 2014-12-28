@@ -25,14 +25,23 @@
 * More arbitrary couplings will require a full sparse matrix multiply
 */
 
-#define N 12
+#define N 3
 #define NVAR 2
 #define NSTEPS 2000
 #define STEP 0.1
 
-static const double k[] = {0.1, 1.0, 0.4, 0.2, 2.0, 0.8, 0.1, 1.1, 1.0, 1.4, 0.2, 2.0, 0.8, 0.1};
-static const double INITIAL[] = {0.5, 0.0,  0.1, 0.0, 0.1, 0.0,  0.0, 0.0,  -0.2, 0.0, -0.0, 0.0, 0.5, 0.0,  0.8, 0.0, 0.1, 0.0,  0.0, 0.0,  -0.2, 0.0, -0.5, 0.0};
+//static const double k[] = {0.1, 1.0, 0.4, 0.2, 2.0, 0.8, 0.1, 1.1, 1.0, 1.4, 0.2, 2.0, 0.8, 0.1};
+//static const double INITIAL[] = {0.5, 0.0,  0.1, 0.0, 0.1, 0.0,  0.0, 0.0,  -0.2, 0.0, -0.0, 0.0, 0.5, 0.0,  0.8, 0.0, 0.1, 0.0,  0.0, 0.0,  -0.2, 0.0, -0.5, 0.0};
 
-//static const double k[] = {1.0, 0.02, 1.0};
-//static const double INITIAL[] = {0.5, 0.0,  0.0, 0.0};
+static const double k[] = {1.0, 0.2, 1.0, 1.0};
+static const double INITIAL[] = {0.5, 0.0,  0.0, 0.0, 0.4, 0.0};
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 double * sim_coupled();
+
+#ifdef __cplusplus
+}
+#endif
