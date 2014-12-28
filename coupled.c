@@ -74,36 +74,38 @@ static double nexteuler[N*2];
 * just a step of the heun
 * ye_{i+1} = y_i + h * f(t_i,y_i)
 * y_{i+1} = y_i + h/2 *( f(t_i, y_i) + f(t_{i+1},ye_{i+1}) )
-* the N, 2 stride is assumed
+* the N, NVAR stride is assumed
 */
 static void heun(double *state, double *next, double dt){
-    int i,j;
+    int i, j, nv;
     dfun(state, dleft);
     for (i = 0; i < N; ++i) {
-        j=i*2; // this is effectively an unrolled loop over NVAR. should use a loop?
-        nexteuler[j] = state[j] + dt * dleft[j];
-        nexteuler[j+1] = state[j+1] + dt * dleft[j+1];
+        j = i * NVAR;
+        for (nv = 0; nv < NVAR; ++nv){
+            nexteuler[j + nv] = state[j + nv] + dt * dleft[j + nv];
+        }
     }
     dfun(nexteuler, dright);
     for (i = 0; i < N; ++i) {
-        j=i*2;
-        next[j] = state[j] + 0.5 * dt * (dleft[j] + dright[j]);
-        next[j+1] = state[j+1] + 0.5 * dt * (dleft[j+1] + dright[j+1]);
+        j = i * NVAR;
+        for (nv = 0; nv < NVAR; ++nv){
+            next[j + nv] = state[j + nv] + 0.5 * dt * (dleft[j + nv] + dright[j + nv]);
+        }
     }
 }
 
 /**
-* stride assumption n, 2
+* stride assumption N, 2
 */
 double * sim_coupled(){
-    int stride = N * 2;
-    double *hist = malloc(sizeof(double) * NSTEPS  * N * 2);
+    int stride = N * NVAR;
+    double *hist = malloc(sizeof(double) * NSTEPS  * N * NVAR);
 
     double *state = hist;
     double *next;
     int i;
 
-    for (i = 0; i < N* NVAR; ++i) {
+    for (i = 0; i < N * NVAR; ++i) {
         state[i] = INITIAL[i];
     }
 
