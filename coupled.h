@@ -33,8 +33,15 @@
 //static const double k[] = {0.1, 1.0, 0.4, 0.2, 2.0, 0.8, 0.1, 1.1, 1.0, 1.4, 0.2, 2.0, 0.8, 0.1};
 //static const double INITIAL[] = {0.5, 0.0,  0.1, 0.0, 0.1, 0.0,  0.0, 0.0,  -0.2, 0.0, -0.0, 0.0, 0.5, 0.0,  0.8, 0.0, 0.1, 0.0,  0.0, 0.0,  -0.2, 0.0, -0.5, 0.0};
 
-static const double k[] = {1.0, 0.2, 1.0, 1.0};
-static const double INITIAL[] = {0.5, 0.0,  0.0, 0.0, 0.4, 0.0};
+static const double INITIAL[] = {1.0, 0.0,  0.0, 0.0, 0.0, 0.0};
+static const double k[] = {1.0, 1.0, 1.0, 1.0};
+
+// coupling matrix. a adjacency matrix. the values are not k's, derived from them!
+static const double km[N][N] = {
+        {-2.0, 1.0, 0.0},
+        {1.0, -2.0, 1.0},
+        {0.0, 1.0, -2.0},
+};
 
 #ifdef __cplusplus
 extern "C"{
