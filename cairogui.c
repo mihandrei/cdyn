@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <cairo/cairo.h>
-#include "coupled.h"
+#include "lib/coupled.h"
 
 void timeseries_2_png(double *h){
 

@@ -47,7 +47,7 @@ static const double km[N][N] = {
 extern "C"{
 #endif
 
-double * sim_coupled();
+extern double * sim_coupled();
 
 #ifdef __cplusplus
 }

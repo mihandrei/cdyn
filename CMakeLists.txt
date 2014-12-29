@@ -7,8 +7,7 @@ set(CMAKE_BUILD_TYPE DEBUG)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 
 add_library(coupled SHARED
-    dyn.c
-    coupled.c)
+    lib/coupled.c)
 
 
 ##################
@@ -29,7 +28,7 @@ find_package(OpenGL REQUIRED)
 include_directories(${GLFW_INCLUDE_DIRS})
 include_directories(${GLEW_INCLUDE_DIRS})
 
-add_executable(glui ui.c)
+add_executable(glui meh/ui.c)
 
 target_link_libraries(glui
     m
