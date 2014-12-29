@@ -2,6 +2,19 @@
 #include <cairo/cairo.h>
 #include "lib/coupled.h"
 
+#define N 3
+#define NSTEPS 2000
+#define STEP 0.1
+
+static const double INITIAL[] = {1.0, 0.0,  0.0, 0.0, 0.0, 0.0};
+
+//coupling matrix. a adjacency matrix. the values are not k's, derived from them!
+static const double km[] = {
+        -2.0, 1.0, 0.0,
+        1.0, -2.0, 1.0,
+        0.0, 1.0, -2.0,
+};
+
 void timeseries_2_png(double *h){
 
     int YSPACING = 60;
@@ -43,8 +56,10 @@ void timeseries_2_png(double *h){
 }
 
 int main(int argc, char ** argv){
-    double *h = sim_coupled();
+    struct Sim *s = sim_init(N, km, STEP);
+    double *h = sim_coupled(s, INITIAL, NSTEPS);
     timeseries_2_png(h);
     free(h);
+    sim_free(s);
     return 0;
 }
