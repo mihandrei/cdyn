@@ -1,37 +1,6 @@
 #include <stdlib.h>
 #include "coupled.h"
 
-/**
-* Elastic line specific dfun. Esentially a implicit coupling matrix based on a k string
-* state shape = N, 2
-* dstate shape = N, 2
-* there are 2 doubles x, v for each node
-* the 2 stride is assumed in the code below
-*/
-static void dfun_elastic_line(double *state, double *dstate) {
-    int i, j;
-    double kl, kr;
-    for (i = 1; i < N - 1; ++i) {
-        j = i * 2;
-        kl = k[i];
-        kr = k[i + 1];
-        dstate[j] = state[j + 1]; // x' = v
-        // and now the coupled variable
-        dstate[j + 1] = kl * state[j - 2] - (kl + kr) * state[j] + kr * state[j + 2];
-    }
-    //left edge
-    kl = k[0];
-    kr = k[1];
-    dstate[0] = state[1];
-    dstate[1] = -(kl + kr) * state[0] + kr * state[2];
-    //right edge
-    i = N - 1;
-    j = i * 2;
-    kl = k[i];
-    kr = k[i + 1];
-    dstate[j] = state[j + 1];
-    dstate[j + 1] = kl * state[j - 2] - (kl + kr) * state[j];
-}
 
 /**
 * implements a coupled oscillator net
