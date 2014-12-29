@@ -16,12 +16,20 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
+
+/* opaque type holding sim state */
 struct Sim;
 
 struct Sim* sim_init(int nodes, const double *km, double step);
 void sim_free(struct Sim *);
 
-double * sim_coupled(struct Sim *s, const double *initial, int nsteps);
+/* utility */
+double* sim_alloc_hist(struct Sim *s, int nsteps);
+
+/**
+* run a chunk of the simulation. fill results in hist buffer
+*/
+void sim_run(struct Sim *s, double *hist, const double *initial, int nsteps);
 
 #ifdef __cplusplus
 }

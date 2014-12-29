@@ -3,7 +3,7 @@
 #include "lib/coupled.h"
 
 #define N 3
-#define NSTEPS 2000
+#define NSTEPS 1000
 #define STEP 0.1
 
 static const double INITIAL[] = {1.0, 0.0,  0.0, 0.0, 0.0, 0.0};
@@ -15,7 +15,7 @@ static const double km[] = {
         0.0, 1.0, -2.0,
 };
 
-void timeseries_2_png(double *h){
+void timeseries_2_png(double *h, char *filename) {
 
     int YSPACING = 60;
 
@@ -49,7 +49,7 @@ void timeseries_2_png(double *h){
         }
     }
 
-    cairo_surface_write_to_png(surface, "/home/mihai/learnc/concrete_osc/image.png");
+    cairo_surface_write_to_png(surface, filename);
 
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
@@ -57,8 +57,17 @@ void timeseries_2_png(double *h){
 
 int main(int argc, char ** argv){
     struct Sim *s = sim_init(N, km, STEP);
-    double *h = sim_coupled(s, INITIAL, NSTEPS);
-    timeseries_2_png(h);
+    double *h = sim_alloc_hist(s, NSTEPS);
+
+    sim_run(s, h, INITIAL, NSTEPS);
+
+    timeseries_2_png(h, "/home/mihai/learnc/concrete_osc/image-a.png");
+    
+    //continue sim
+    sim_run(s, h, h + N * NVAR * (NSTEPS - 10), NSTEPS);
+
+    timeseries_2_png(h, "/home/mihai/learnc/concrete_osc/image-b.png");
+
     free(h);
     sim_free(s);
     return 0;

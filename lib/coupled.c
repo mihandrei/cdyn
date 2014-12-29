@@ -30,6 +30,10 @@ void sim_free(struct Sim *s){
     free(s);
 }
 
+double* sim_alloc_hist(struct Sim *s, int nsteps){
+    return malloc(sizeof(double) * nsteps * s->n * NVAR);
+};
+
 /**
 * implements a coupled oscillator net
 * relies on the km coupling matrix
@@ -73,9 +77,8 @@ static void heun(struct Sim *s, double *state, double *next, double dt) {
 /**
 * stride assumption N, 2
 */
-double *sim_coupled(struct Sim *s, const double *initial, int nsteps) {
+void sim_run(struct Sim *s, double *hist, const double *initial, int nsteps) {
     int stride = s->n * NVAR;
-    double *hist = malloc(sizeof(double) * nsteps * s->n * NVAR);
 
     double *state = hist;
     double *next;
@@ -90,5 +93,4 @@ double *sim_coupled(struct Sim *s, const double *initial, int nsteps) {
         heun(s, state, next, s->step);
         state = next;
     }
-    return hist;
 }
