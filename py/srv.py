@@ -4,43 +4,58 @@ from flask import render_template
 from cty import Wr, NVAR
 import numpy as np
 import json
+import cProfile
 
 app = Flask(__name__)
-nt = 1024
+nt = 2*1024
+
+def build_linear_coupled_array(n):
+    d = -2.0 * np.ones(n)
+    d2 = 1.0 * np.ones(n - 1)
+    return np.diag(d) + np.diag(d2, 1) + np.diag(d2, -1)
+
+def build_grid_coupled_array(n, m):
+    d = -4.0 * np.ones(n * m)
+    d2 = 1.0 * np.ones(n * m - 1)
+    d2[n-1::n] = 0
+    dv = 1.0 * np.ones(n*m - n)
+    ret = np.diag(d) + np.diag(d2, 1) + np.diag(d2, -1)
+    ret += np.diag(dv, n) + np.diag(dv, -n)
+    return ret
+
+def profile_func(func):
+    def wrapper(*args, **kwargs):
+        profile_file = func.__name__ + ".profile"
+        print("profiling function %s. Profile stored in %s" % (func.__name__, profile_file))
+        prof = cProfile.Profile()
+        ret = prof.runcall(func, *args, **kwargs)
+        prof.dump_stats(profile_file)
+        return ret
+    return wrapper
 
 # 3x2 oscillator array. oscillates in z 'direction'
-cm32 = np.array([[-3.0, 1.0, 0.0, 1.0, 0.0, 0.0],
-                 [1.0, -3.0, 1.0, 0.0, 1.0, 0.0],
-                 [0.0, 1.0, -3.0, 1.0, 0.0, 1.0],
-                 [1.0, 0.0, 1.0, -3.0, 1.0, 0.0],
-                 [0.0, 1.0, 0.0, 1.0, -3.0, 1.0],
-                 [0.0, 0.0, 1.0, 0.0, 1.0, -3.0]])
+ini_l = np.zeros((5 * 5, NVAR))
+ini_l[0] = [2.0, 0.0]
+cm32 = build_grid_coupled_array(5, 5)
 
-ini32 = np.array([[-1.1, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]])
-
-# 6 linear coupled oscillators
-cm6l = np.array([[-2.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-                 [1.0, -2.0, 1.0, 0.0, 0.0, 0.0],
-                 [0.0, 1.0, -2.0, 1.0, 0.0, 0.0],
-                 [0.0, 0.0, 1.0, -2.0, 1.0, 0.0],
-                 [0.0, 0.0, 0.0, 1.0, -2.0, 1.0],
-                 [0.0, 0.0, 0.0, 0.0, 0.0, -2.0]])
-
+# linear coupled oscillators
+ini32 = np.zeros((20, NVAR))
+ini32[0] = [1.0, 0.0]
+cm6l = build_linear_coupled_array(20)
 
 @app.route("/")
 def home():
     return render_template('draw.html')
 
-
 @app.route("/step")
+# @profile_func
 def step():
     w_lin.run(out_lin, ini32, nt)
-    w_grid.run(out_grid, ini32, nt)
+    w_grid.run(out_grid, ini_l, nt)
     return json.dumps({
         'lin': out_lin.tolist(),
         'grid': out_grid.tolist()
     })
-
 
 if __name__ == "__main__":
     w_lin = Wr(cm6l, 0.1)

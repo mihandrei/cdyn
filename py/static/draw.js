@@ -44,31 +44,28 @@ function grid(ctx, d, w, h){
 };
 
 Drawe.prototype.draw = function(t){
-    var self = this;
     var ctx = this.c.getContext("2d");
     ctx.clearRect(0,0, 600, 600);
     ctx.save();
     ctx.translate(300, 300);
-    //ctx.scale(2, 2);
-    //ctx.rotate(-0.1);
-    grid(ctx, 100, 300, 300);
+    //grid(ctx, 100, 300, 300);
     ctx.fillStyle = 'rgba(200, 10, 50, 0.6)';
-
 
     var frame;
     var n, v, a;
     frame = data.lin[time];
     for(n=0; n < frame.length; n++){
         a = frame[n][0];
-        ctx.fillRect(-270 + 90*n + 30*a, -270, 30, 30);
+        ctx.fillRect(-300 + 20*n , -270+ 20*a, 10, 10);
     }
 
-    ctx.fillStyle = 'rgba(40, 100, 40, 0.6)';
+    ctx.fillStyle = 'rgba(0, 20, 60, 0.6)';
     frame = data.grid[time];
-    for(n=0; n < 2; n++){//! hardcoded grid shape
-        for(v=0; v < 3; v++) {
-            a = frame[n * 3 + v][0];
-            ctx.fillRect(-180 + 90 * v, 90*n, 30 + a*20, 30+ a*20);
+    for(n=0; n < 5; n++){//! hardcoded grid shape
+        for(v=0; v < 5; v++) {
+            a = frame[n * 5 + v][0];
+            var d = 18*(1 + a);
+            ctx.fillRect(-300 + 20 * v - d/2, -240 + 20*n - d/2, d, d);
         }
     }
     ctx.restore();
@@ -88,7 +85,7 @@ $(document).ready(function(){
         var timer = setInterval(function(){
             d.draw();
             time +=1;
-            if (time >= data.length ){
+            if (time >= data.lin.length||time>=data.grid.length){
                 clearInterval(timer);
             }
         }, 50);
