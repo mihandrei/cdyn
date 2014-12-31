@@ -3,7 +3,7 @@
 #include "lib/coupled.h"
 
 #define N 3
-#define NSTEPS 1000
+#define NSTEPS 300
 #define STEP 0.1
 
 static const double INITIAL[] = {1.0, 0.0,  0.0, 0.0, 0.0, 0.0};
@@ -64,7 +64,7 @@ int main(int argc, char ** argv){
     timeseries_2_png(h, "/home/mihai/learnc/concrete_osc/image-a.png");
     
     //continue sim
-    sim_run(s, h, h + N * NVAR * (NSTEPS - 10), NSTEPS);
+    sim_run(s, h, h + N * NVAR * (NSTEPS - 1), NSTEPS);
 
     timeseries_2_png(h, "/home/mihai/learnc/concrete_osc/image-b.png");
 

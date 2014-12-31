@@ -11,7 +11,7 @@ add_library(coupled SHARED
 
 
 ##################
-#pkg_search_module(CAIRO REQUIRED cairo)  #cact nu mere
+#pkg_search_module(CAIRO REQUIRED cairo)   nu mere
 
 include_directories("/usr/include/cairo")
 
@@ -19,20 +19,3 @@ add_executable(cairogui cairogui.c)
 
 target_link_libraries(cairogui coupled cairo)
 
-####gl stupidity#####
-#pkg_search_module(GLFW REQUIRED glfw3)
-#pkg_search_module(GLEW REQUIRED glew)
-
-#find_package(OpenGL REQUIRED)
-
-#include_directories(${GLFW_INCLUDE_DIRS})
-#include_directories(${GLEW_INCLUDE_DIRS})
-
-#add_executable(glui meh/ui.c)
-
-#target_link_libraries(glui
-#    m
-#    coupled
-#    ${OPENGL_LIBRARY}
-#    ${GLFW_LIBRARIES}
-#    ${GLEW_LIBRARIES})
