@@ -8,10 +8,10 @@ var style = {
 
 function Drawe(){
     var body = document.getElementsByTagName('body')[0];
-    this.W = Math.min(body.offsetWidth, body.offsetHeight);
+    //this.W = Math.min(body.offsetWidth, body.offsetHeight);
     this.c = document.getElementById('ploty');
-    this.c.width = this.W-4;
-    this.c.height = this.W-4;
+    this.c.width = body.offsetWidth-4;
+    this.c.height = body.offsetHeight-4;
 }
 
 function grid(ctx, d, w, h){
@@ -41,11 +41,11 @@ function grid(ctx, d, w, h){
     ctx.lineTo(h-1, 0.5);
     ctx.strokeStyle = style.ax;
     ctx.stroke();
-};
+}
 
 Drawe.prototype.draw = function(t){
     var ctx = this.c.getContext("2d");
-    ctx.clearRect(0,0, 600, 600);
+    ctx.clearRect(0,0, this.c.width, this.c.height);
     ctx.save();
     ctx.translate(300, 300);
     //grid(ctx, 100, 300, 300);
@@ -56,16 +56,16 @@ Drawe.prototype.draw = function(t){
     frame = data.lin[time];
     for(n=0; n < frame.length; n++){
         a = frame[n][0];
-        ctx.fillRect(-300 + 20*n , -270+ 20*a, 10, 10);
+        ctx.fillRect(-300 + 4*n , -270 + 8*a, 3, 4);
     }
 
     ctx.fillStyle = 'rgba(0, 20, 60, 0.6)';
     frame = data.grid[time];
-    for(n=0; n < 5; n++){//! hardcoded grid shape
-        for(v=0; v < 5; v++) {
-            a = frame[n * 5 + v][0];
-            var d = 18*(1 + a);
-            ctx.fillRect(-300 + 20 * v - d/2, -240 + 20*n - d/2, d, d);
+    for(n=0; n < 20; n++){//! hardcoded grid shape
+        for(v=0; v < 20; v++) {
+            a = frame[n * 20 + v][0];
+            var d = 8*(1 + a);
+            ctx.fillRect(-300 + 10 * v - d/2, -240 + 10*n - d/2, d, d);
         }
     }
     ctx.restore();
@@ -88,6 +88,6 @@ $(document).ready(function(){
             if (time >= data.lin.length||time>=data.grid.length){
                 clearInterval(timer);
             }
-        }, 50);
+        }, 33);
     });
 });

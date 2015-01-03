@@ -33,15 +33,16 @@ def profile_func(func):
         return ret
     return wrapper
 
-# 3x2 oscillator array. oscillates in z 'direction'
-ini_l = np.zeros((5 * 5, NVAR))
-ini_l[0] = [2.0, 0.0]
-cm32 = build_grid_coupled_array(5, 5)
+# oscillator grid. oscillates in z 'direction'
+ini32 = np.zeros((20 * 20, NVAR))
+ini32[0] = [2.0, 0.0]
+cm32 = build_grid_coupled_array(20, 20)
 
 # linear coupled oscillators
-ini32 = np.zeros((20, NVAR))
-ini32[0] = [1.0, 0.0]
-cm6l = build_linear_coupled_array(20)
+ini_l = np.zeros((200, NVAR))
+ini_l[0:10] = [2.0, 0.0]
+ini_l[100] = [-2.0, 0.0]
+cm6l = build_linear_coupled_array(200)
 
 @app.route("/")
 def home():
@@ -50,8 +51,8 @@ def home():
 @app.route("/step")
 # @profile_func
 def step():
-    w_lin.run(out_lin, ini32, nt)
-    w_grid.run(out_grid, ini_l, nt)
+    w_lin.run(out_lin, ini_l, nt)
+    w_grid.run(out_grid, ini32, nt)
     return json.dumps({
         'lin': out_lin.tolist(),
         'grid': out_grid.tolist()
