@@ -7,6 +7,9 @@ set(CMAKE_BUILD_TYPE DEBUG)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 
 add_library(coupled SHARED
+    lib/arr.c
+    lib/sparse.c
+    lib/conn.c
     lib/coupled.c)
 
 
@@ -19,3 +22,6 @@ add_executable(cairogui cairogui.c)
 
 target_link_libraries(cairogui coupled cairo)
 
+#################
+add_executable(test test.c)
+target_link_libraries(test coupled)

@@ -23,8 +23,9 @@ struct Sim;
 struct Sim* sim_init(int nodes, const double *km, double step);
 void sim_free(struct Sim *);
 
-/* utility */
+/* utilities */
 double* sim_alloc_hist(struct Sim *s, int nsteps);
+double * build_linear_coupled_array(int n);
 
 /**
 * run a chunk of the simulation. fill results in hist buffer
